@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SearchBar from "./SearchBar";
 import TodoContainer from "./TodoContainer";
+import Statistics from "./Statistics";
 
 export interface Todo {
   id: string;
@@ -21,13 +22,13 @@ function TodoList() {
       id: "2",
       title: "ok",
       description: "test",
-      isDone: false,
+      isDone: true,
     },
     {
       id: "3",
       title: "ok",
       description: "test",
-      isDone: false,
+      isDone: true,
     },
   ]);
   const handleDeleteTodo = (id: string) => {
@@ -58,13 +59,24 @@ function TodoList() {
     setTodoList(newArray);
     console.log(id, title, description);
   };
-
+  const [showIncompleteOnly, setShowIncompleteOnly] = useState(false);
+  const toggleShowIncomplete = () => {
+    setShowIncompleteOnly(!showIncompleteOnly);
+  };
+  console.log("showIncompleteOnly", showIncompleteOnly);
+  const filteredTodoList = showIncompleteOnly ? todoList.filter((todo) => !todo.isDone) : todoList;
+  console.log("filteredTodoList", filteredTodoList);
   return (
     <div className="shadow max-w-[400px] w-1/2 h-1/2 p-5">
       <h1 className="text-xl font-bold">TODO LIST</h1>
       <SearchBar handleAddTodo={handleAddTodo} />
-      <TodoContainer
+      <Statistics
         todoList={todoList}
+        showIncompleteOnly={showIncompleteOnly}
+        toggleShowIncomplete={toggleShowIncomplete}
+      />
+      <TodoContainer
+        todoList={filteredTodoList}
         onDeleteTodo={handleDeleteTodo}
         onUpdateTodo={handleUpdate}
       />
